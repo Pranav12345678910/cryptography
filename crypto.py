@@ -88,34 +88,35 @@ def decrypt_vigenere(ciphertext, keyword):
         decrypted_result += chr(char_value)      
         x += 1 
     return decrypted_result
-    
+
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
 def generate_private_key(n=8):
-    W = ()
-    total = 0
-    for x in range(0,n):
+    #creates a tuple of n elements by having a for loop
+    W = [random.randint(1,35), 0, 0, 0, 0, 0, 0, 0]
+    total = W[0]
+    for x in range(len(W)):
+        #adds to the tuple a random integer such that the sequence stays superincreasing
+        W[x] = random.randint(total + 1, 2 * total)
+        #finds total of tuple
         total += W[x]
-        W += (random.randint(total + 1, 2 * total),)
     Q = random.randint(total + 1, 2 * total)
     r = 0
     while math.gcd(r,Q) != 1:
+        #keeps looping until r and q are coprime
         r = random.randint(2, Q-1)
-    B = ()
-    #b_i = R * w_i mod Q
-    for x in range(0, n):
-        B1 = list(B)
-        B1.append(r *  W[x] % Q)
-        B = tuple(B1)
-    private_key = (W, r, Q)
+    private_key = (tuple(W), Q, r)
     return private_key
-
 
 # Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 # Returns: B - a length-n tuple of integers
 def create_public_key(private_key):
-    return 
-
+    W, Q, r = private_key
+    B = []
+    for x in W:
+        #turns B into the public key  
+        B.append(r *  x % Q)
+    return tuple(B)
 
 # Arguments: string, tuple B
 # Returns: list of integers
@@ -129,7 +130,7 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main(): 
-    print(decrypt_vigenere("LXFOPVEFRNHR", "LEMON"))
+  print(create_public_key(generate_private_key(n=8)))
 
 if __name__ == "__main__":
     main()
