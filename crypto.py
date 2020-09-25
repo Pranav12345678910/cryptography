@@ -1,3 +1,5 @@
+import random
+import math
 # Caesar Cipher
 # Arguments: string, integer
 # Returns: string
@@ -56,38 +58,78 @@ def encrypt_vigenere(plaintext, keyword):
         encrypted_result += chr(char_value)      
         x += 1 
     return encrypted_result
-        
-    
-    #return final_string
 
 # Arguments: string, string
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
+    decrypted_result = ""
+    key = ""
+    if len(keyword) < len(ciphertext):
+        repeats = len(ciphertext) // len(keyword)
+        key = keyword * repeats
+        #in case the length of the plaintext is not a multiple of the length of the keyword
+        if len(key) != len(ciphertext):
+            difference = len(ciphertext) - len(key)
+            #adding the part that is remaining
+            key += keyword[0:difference]
+    if len(keyword) > len(ciphertext):
+        difference = len(keyword) - len(ciphertext)
+        key += keyword[0:difference - 1]
+    if len(keyword) == len(ciphertext):
+        key = keyword   
+    x = 0
+    while x < len(ciphertext) and x < len(key):
+        #number that corresponds to encrypted character
+        char_value = ord(ciphertext[x])
+        key_char_value = ord(key[x]) - ord('A')
+        char_value -= key_char_value
+        if char_value < ord('A'):
+            char_value = char_value + ord('Z') + 1 - ord('A') 
+        decrypted_result += chr(char_value)      
+        x += 1 
+    return decrypted_result
     
-
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
-# Returns: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 def generate_private_key(n=8):
-    pass
+    W = ()
+    total = 0
+    for x in range(0,n):
+        total += W[x]
+        W += (random.randint(total + 1, 2 * total),)
+    Q = random.randint(total + 1, 2 * total)
+    r = 0
+    while math.gcd(r,Q) != 1:
+        r = random.randint(2, Q-1)
+    B = ()
+    #b_i = R * w_i mod Q
+    for x in range(0, n):
+        B1 = list(B)
+        B1.append(r *  W[x] % Q)
+        B = tuple(B1)
+    private_key = (W, r, Q)
+    return private_key
+
 
 # Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
-# Returns: tuple B - a length-n tuple of integers
+# Returns: B - a length-n tuple of integers
 def create_public_key(private_key):
-    pass
+    return 
 
-# Arguments: string, tuple (W, Q, R)
+
+# Arguments: string, tuple B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
     pass
 
-# Arguments: list of integers, tuple B - a length-n tuple of integers
+ 
+# Arguments: list of integers, private key (W, Q, R) with W a tuple.
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main(): 
-    print(encrypt_vigenere("ATTACKATDAWN", "LEMON"))
+    print(decrypt_vigenere("LXFOPVEFRNHR", "LEMON"))
 
 if __name__ == "__main__":
     main()
