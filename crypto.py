@@ -117,12 +117,38 @@ def create_public_key(private_key):
         #turns B into the public key  
         B.append(r *  x % Q)
     return tuple(B)
-
-# Arguments: string, tuple B
-# Returns: list of integers
+    
 def encrypt_mhkc(plaintext, public_key):
-    pass
-
+    C = [] #final list that we return
+    #eventually this will represent the total of C1
+    total = 0
+    for x in plaintext: #for each character in the plaintext (loops through each byte) 
+        print(x)
+        value_int = ord(x)
+        #takes the character, and gets the ascii value and then the binary version of that
+        binary_value = bin(value_int)
+        bit_val_arr = []
+        #converts to string so that we can loop through it
+        str(binary_value)
+        #takes out the "0b" or "1b" part of the binary value
+        binary_value = binary_value[2: 10]
+        #make sure it is 8 bits by adding necessary leading zeros
+        if len(binary_value) != 8:
+            missing = 8 - len(binary_value)
+            while missing != 0:
+                bit_val_arr.append(0)
+                missing -= 1
+        for elem in binary_value: #for each bit in the byte of the plaintext (loops through each bit within the byte) 
+            bit_val_arr.append(elem)
+        for y in range(len(bit_val_arr)):
+            #for each bit in the byte, it multiplies that bit with the corresponding value in the public key 
+            total += int(bit_val_arr[y])*public_key[y]
+        C.append(total)
+        #resets total to 0 so that it doesn't accumulate across different bytes. Total is the total of the bit val arr * public_key for a given byte
+        total = 0
+        #right now the different bits multiplied are different elements in the array, but we need to sum them instead 
+    tuple(C)
+    return C
  
 # Arguments: list of integers, private key (W, Q, R) with W a tuple.
 # Returns: bytearray or str of plaintext
@@ -130,7 +156,8 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main(): 
-  print(create_public_key(generate_private_key(n=8)))
+  print(encrypt_mhkc("FOREACHEPSILONGREATERTHANDELTA", (50, 70, 175, 575, 1240, 3385, 7065, 7978)
+))
 
 if __name__ == "__main__":
     main()
