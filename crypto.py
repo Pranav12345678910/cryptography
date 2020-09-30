@@ -156,7 +156,7 @@ def decrypt_mhkc(ciphertext, private_key):
     #separating W, Q, and R and making other variables
     W = private_key[0]
     R = private_key[1]
-    Q = private_key[2]  
+    Q = private_key[2]
     S = 1
     final_string = ""
     while Q * S % R != 1:
@@ -165,17 +165,18 @@ def decrypt_mhkc(ciphertext, private_key):
         m = []
         C1 = x * S % R
         for i in range(len(W)):
-        if  C1 >= W[len(W) - i - 1]:
-            C1 -= W[len(W) - i - 1]
-            m.append(1)
-        else:
-            m.append(0)
+            if  C1 >= W[len(W) - i - 1]:
+                C1 -= W[len(W) - i - 1]
+                m.append(1)
+            else:
+                m.append(0)
         m.reverse()
         m1 = ""
         for y in m:
-        m1 += str(y) 
+            m1 += str(y) 
         final_string += chr(int(m1, 2))
     return final_string
+
 
 def main(): 
   print(decrypt_mhkc([78631, 97260, 79180, 61686, 29805, 58771, 24392, 61686, 50214, 91201, 36413, 56273, 97260, 85239, 90652, 79180, 61686, 29805, 82095, 61686, 79180, 82095, 24392, 29805, 85239, 49665, 61686, 56273, 82095, 29805], ((40, 95, 180, 469, 824, 1797, 4394, 15296), 46139, 9415)))
