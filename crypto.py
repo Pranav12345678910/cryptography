@@ -1,30 +1,41 @@
 import random
 import math
+
 # Caesar Cipher
 # Arguments: string, integer
 # Returns: string
 def encrypt_caesar(plaintext, offset):
     final_string = "" #string that will be returned later
     for x in plaintext:
-        #can't have the letter represent an ascii value that goes past the alphabet, so that is why use of modulus is necessary
-        value_int = ord(x) + offset
-        if value_int > ord('Z'):
-            #at this point value_int represents the remainder if there is one, so you need to add it to the starting point which is A, because it doesnt start at 0
-            value_int = value_int - ord('Z') - 1 + ord('A')
-        final_string += chr(value_int)
+        if x.isalpha():
+            if ord(x) != 32:
+                value_int = ord(x) + offset
+                if value_int > ord('Z'):
+                    #at this point value_int represents the remainder if there is one, so you need to add it to the starting point which is A, because it doesnt start at 0
+                    value_int = value_int - ord('Z') - 1 + ord('A')
+                final_string += chr(value_int)
+            if ord(x) == 32:
+                final_string += x
+        else:
+            final_string += x
     return final_string 
     
-
 # Arguments: string, integer
 # Returns: string
 def decrypt_caesar(ciphertext, offset): 
     final_string = "" #string that will be returned later
     for x in ciphertext:
-        value_int = ord(x) - offset
-        #if the new number goes before the alphabet, then you want it to be in the alphabet so add 26
-        if value_int < ord('A'):
-            value_int += 26
-        final_string += chr(value_int)
+        if x.isalpha():
+            if ord(x) != 32:
+                value_int = ord(x) - offset
+                if value_int < ord('A'):
+                    #at this point value_int represents the remainder if there is one, so you need to add it to the starting point which is A, because it doesnt start at 0
+                    value_int += 26
+                final_string += chr(value_int)
+            if ord(x) == 32:
+                final_string += x
+        else:
+            final_string += x
     return final_string
 
 # Vigenere Cipher
@@ -44,9 +55,9 @@ def encrypt_vigenere(plaintext, keyword):
             key += keyword[0:difference]
     if len(keyword) > len(plaintext):
         difference = len(keyword) - len(plaintext)
-        key += keyword[0:difference - 1]
+        key += keyword[0: len(keyword) - difference]
     if len(keyword) == len(plaintext):
-        key = keyword   
+        key = keyword       
     x = 0
     while x < len(plaintext) and x < len(key):
         #number that corresponds to encrypted character
@@ -74,7 +85,7 @@ def decrypt_vigenere(ciphertext, keyword):
             key += keyword[0:difference]
     if len(keyword) > len(ciphertext):
         difference = len(keyword) - len(ciphertext)
-        key += keyword[0:difference - 1]
+        key += keyword[0: len(keyword) - difference]
     if len(keyword) == len(ciphertext):
         key = keyword   
     x = 0
@@ -123,7 +134,6 @@ def encrypt_mhkc(plaintext, public_key):
     #eventually this will represent the total of C1
     total = 0
     for x in plaintext: #for each character in the plaintext (loops through each byte) 
-        print(x)
         value_int = ord(x)
         #takes the character, and gets the ascii value and then the binary version of that
         binary_value = bin(value_int)
@@ -179,7 +189,6 @@ def decrypt_mhkc(ciphertext, private_key):
 
 
 def main(): 
-  print(decrypt_mhkc([78631, 97260, 79180, 61686, 29805, 58771, 24392, 61686, 50214, 91201, 36413, 56273, 97260, 85239, 90652, 79180, 61686, 29805, 82095, 61686, 79180, 82095, 24392, 29805, 85239, 49665, 61686, 56273, 82095, 29805], ((40, 95, 180, 469, 824, 1797, 4394, 15296), 46139, 9415)))
-
+    print(decrypt_mhkc(encrypt_mhkc("MICHAELTHIBODEAUX", (6728, 5993, 4838, 6421, 2334, 1849, 6121, 3438)), ((4, 11, 22, 75, 182, 527, 1099, 2418), 7148, 7043)))
 if __name__ == "__main__":
     main()
