@@ -157,7 +157,6 @@ def encrypt_mhkc(plaintext, public_key):
         #resets total to 0 so that it doesn't accumulate across different bytes. Total is the total of the bit val arr * public_key for a given byte
         total = 0
         #right now the different bits multiplied are different elements in the array, but we need to sum them instead 
-    C = tuple(C)
     return C
  
 # Arguments: list of integers, private key (W, Q, R) with W a tuple.
